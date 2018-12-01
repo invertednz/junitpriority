@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="junitpriority" default="all" basedir=".">
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- Edit here: select main class to run test suite -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <property name="junit.class.name" value="sample.SuitTest"/>
+
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- PLEASE DO NOT EDIT FROM HERE TO END OF FILE -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <description>Builds, tests, and runs junitpriority</description>
+    <property name="test.dir" location="${basedir}/src/test/java"/>
+    <property name="bin.dir" value="${basedir}/target"/>
+    <property name="report.dir" location="${bin.dir}/junit-reports"/>
+    <property name="report.data.dir" location="${bin.dir}/junit-reports/data"/>
+    <!-- the location of all the jar files we downloaded -->
+    <property name="jars" value="libs"/>
+
+	<property name="unit.test" value="*.class" />
+
+
+    <!-- the ant job for cleaning up our environment -->
+    <target name="clean" description="Remove all .class files">
+        <delete dir="target"/>
+        <delete includeEmptyDirs="true" failonerror="false">
+            <fileset dir="${test.dir}">
+                <include name="**/*.class"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <target name="classpath">
+        <path id="classpath">
+            <fileset dir="${jars}">
+                <include name="**/*.jar" />
+            </fileset>
+            <pathelement location="${bin.dir}/classes" />
+            <pathelement location="${bin.dir}/test-classes" />
+        </path>
+    </target>
+
+    <!-- the ant job for compiling our code -->
+    <target name="compile" depends="clean,classpath">
+        <mkdir dir="${bin.dir}"/>
+        <mkdir dir="${bin.dir}/classes"/>
+        <javac srcdir="src/main/java" destdir="${bin.dir}/classes" classpathref="classpath" includeantruntime="false"/>
+    </target>
+
+    <!-- the ant job for compiling our test code -->
+    <target name="compile-test" depends="compile">
+        <mkdir dir="${bin.dir}/test-classes"/>
+        <javac srcdir="src/test/java" destdir="${bin.dir}/test-classes" classpathref="classpath" includeantruntime="false"/>
+    </target>
+
+    <target name="test-jar" depends="compile-test">
+        <jar destfile="${bin.dir}/${ant.project.name}.jar" basedir="${bin.dir}/test-classes">
+            <manifest>
+                <attribute name="Main-Class" value="${junit.class.name}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="package" depends="test-jar">
+    </target>
+
+    <target name="all" depends="compile-test">
+        <mkdir dir="${report.data.dir}"/>
+        <mkdir dir="${report.dir}"/>
+        <retry retrycount="3">
+        <junit fork="no" haltonfailure="no" showoutput="yes" printsummary="true">
+            <test name="${junit.class.name}" todir="${report.data.dir}"/>
+            <formatter type="xml"/>
+            <classpath refid="classpath" />
+        </junit>
+        </retry>
+        <junitreport todir="${report.dir}">
+            <fileset dir="${report.data.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${report.dir}"/>
+        </junitreport>
+    </target>
+	
+	<target name="test" depends="compile-test">
+	        <mkdir dir="${report.data.dir}"/>
+	        <mkdir dir="${report.dir}"/>
+	        <retry retrycount="3">
+	        <junit fork="no" haltonfailure="no" showoutput="yes" printsummary="true">
+	            <!--<test name="${junit.class.name}" todir="${report.data.dir}"/>-->
+	        	<test name="sample.junit.CalculatorTestSuccessful"/>
+	            <formatter type="xml"/>
+	            <classpath refid="classpath" />
+	        	<!--<batchtest fork="yes" todir="${report.data.dir}">
+	        	    <fileset dir="${test.dir}" includes="**/${unit.test}"/>
+	        	</batchtest>-->
+	        </junit>
+	        </retry>
+	        <junitreport todir="${report.dir}">
+	            <fileset dir="${report.data.dir}">
+	                <include name="TEST-*.xml"/>
+	            </fileset>
+	            <report format="frames" todir="${report.dir}"/>
+	        </junitreport>
+	    </target>
+	<target name="junit2" depends="compile-test">
+	    <!-- you may override this on the command line:
+	         ant -Dtestcase=com/oreilly/javaxp/junit/TestGame junit2 -->
+	    <property name="testcase" 
+	              value="sample/junit/CalculatorTestSuccessful"/>
+		
+		<mkdir dir="${report.data.dir}"/>
+			        <mkdir dir="${report.dir}"/>
+			        <retry retrycount="3">
+			        <junit fork="no" haltonfailure="no" showoutput="yes" printsummary="true">
+			            <test name="${junit.class.name}" todir="${report.data.dir}"/>
+			            <formatter type="xml"/>
+			        	<formatter type="plain" usefile="false" /> <!-- to screen -->
+			            <classpath refid="classpath" />
+			        	<test name="${testcase}"/>
+			        	<!--<batchtest fork="yes" todir="${report.data.dir}">
+			        	    <fileset dir="${test.dir}" includes="**/${unit.test}"/>
+			        	</batchtest>-->
+			        </junit>
+			        </retry>
+			        <junitreport todir="${report.dir}">
+			            <fileset dir="${report.data.dir}">
+			                <include name="TEST-*.xml"/>
+			            </fileset>
+			            <report format="frames" todir="${report.dir}"/>
+			        </junitreport>
+	  </target>
+</project>

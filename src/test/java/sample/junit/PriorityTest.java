@@ -17,6 +17,7 @@ public class PriorityTest {
 
     @Test
     public void Test1() {
+    	fail("a failing test");
     }
 
     @Test

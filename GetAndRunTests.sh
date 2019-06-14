@@ -60,7 +60,7 @@ if [[ $rerun == "true" ]]; then
         rerun_tests_execute
         (( numruns++ ))
     done
-; fi  
+; fi
 }
 
 failfast_tests () {

@@ -15,6 +15,7 @@ commitId=$5
 finalTestNames=""
 
 delete_reports () {
+echo "here 1"
 if [[ $reporttype == "directory"]] ; then rm '$report*.xml' ; fi
 if [[ $reporttype == "file" ]] ; then rm $report ; fi
 }
@@ -24,6 +25,7 @@ if [[ $reporttype == "file" ]] ; then rm $report ; fi
 #./GetAndRunTests.sh: line 18: `if [[ $reporttype == "directory"]] ; then rm '$report*.xml' ; fi'
 
 execute_tests () {
+echo "here 2"
 if [[ $deletereports == "true" ]] ; then delete_reports ; fi
 $startrun$1$endrun
 echo $startrun$1$endrun

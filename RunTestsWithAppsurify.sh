@@ -13,7 +13,7 @@ rerun="false" #default false
 importtype="junit" #default junit
 reporttype="directory" #default directory
 teststorun="all" #options include - high, medium, low, unassigned, ready, open
-deletereports="true" #options true or false, BE CAREFUL THIS WILL DELETE THE SPECIFIC FILE OR ALL XML FILES IN THE DIRECTORY
+deletereports="false" #options true or false, BE CAREFUL THIS WILL DELETE THE SPECIFIC FILE OR ALL XML FILES IN THE DIRECTORY
 #startrun needs to end with a space sometimes
 #endrun needs to start with a space sometimes
 
@@ -123,8 +123,8 @@ if [[ $report == "" ]] ; then echo "no report specified" ; exit 1 ; fi
 if [[ $teststorun == "" ]] ; then echo "no teststorun specified" ; exit 1 ; fi
 if [[ $startrun == "" ]] ; then echo "no command used to start running tests specified" ; exit 1 ; fi
 
-####example RunTestsWithAppsurify.sh --url "http://appsurify.dev.appsurify.com" --apikey "MTpEbzhXQThOaW14bHVQTVdZZXNBTTVLT0xhZ00" --project "Test" --testsuite "Test" --report "report" --teststorun "all" --startrun "mvn -tests" --testsuites ""
-#example RunTestsWithAppsurify.sh --url "http://appsurify.dev.appsurify.com" --apikey "MTpEbzhXQThOaW14bHVQTVdZZXNBTTVLT0xhZ00" --project "Test" --testsuite "Test" --report "report" --teststorun "all" --startrun "C:\apache\apache-maven-3.5.0\bin\mvn tests " --testsuites ""
+####example RunTestsWithAppsurify.sh --url "http://appsurify.dev.appsurify.com" --apikey "MTpEbzhXQThOaW14bHVQTVdZZXNBTTVLT0xhZ00" --project "Test" --testsuite "Test" --report "report" --teststorun "all" --startrun "mvn -tests" 
+#example RunTestsWithAppsurify.sh --url "http://appsurify.dev.appsurify.com" --apikey "MTpEbzhXQThOaW14bHVQTVdZZXNBTTVLT0xhZ00" --project "Test" --testsuite "Test" --report "report" --teststorun "all" --startrun "C:\apache\apache-maven-3.5.0\bin\mvn tests " 
 
 #url
 #url="http://appsurify.dev.appsurify.com"

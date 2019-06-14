@@ -19,6 +19,10 @@ if [[ $reporttype == "directory"]] ; then rm '$report*.xml' ; fi
 if [[ $reporttype == "file" ]] ; then rm $report ; fi
 }
 
+#./GetAndRunTests.sh: line 18: syntax error in conditional expression: unexpected token `;'
+#./GetAndRunTests.sh: line 18: syntax error near `;'
+#./GetAndRunTests.sh: line 18: `if [[ $reporttype == "directory"]] ; then rm '$report*.xml' ; fi'
+
 execute_tests () {
 if [[ $deletereports == "true" ]] ; then delete_reports ; fi
 $startrun$1$endrun

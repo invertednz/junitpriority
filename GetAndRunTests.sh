@@ -48,7 +48,7 @@ get_tests $1
 count=0
 
 for testName in $?; do count=$((count+1));  echo $count; if [ $(( $count % $maxtests )) -eq "0" ]; then count=0; finalTestNames=$finalTestNames`echo $testseparator$prefixtest$testName$postfixtest`; finalTestNames=`echo $finalTestNames | sed 's/,$//g'`; execute_tests $finalTestNames ; finalTestNames=""; elif [ count == 1 ];  then finalTestNames=$prefixtest$testName$postfixtest; else finalTestNames=$finalTestNames`echo $testseparator$prefixtest$testName$postfixtest`; fi;done
-finalTestNames=`echo $finalTestNames | sed 's/,$//g'` ; fi
+finalTestNames=`echo $finalTestNames | sed 's/,$//g'`
 if [[ $finalTestNames != "" ]] ; then execute_tests $finalTestNames ; fi
 }
 
@@ -83,7 +83,7 @@ get_tests $1
 count=0
 
 #for testName in $?; do count=$((count+1));  echo $count; if [ $(( $count % $maxtests )) -eq "0" ]; then count=0; finalTestNames=$finalTestNames`echo $testseparator$prefixtest$testName$postfixtest`; finalTestNames=`echo $finalTestNames | sed 's/,$//g'`; execute_tests $finalTestNames ; failfast_tests ; finalTestNames=""; elif [ count == 1 ];  then finalTestNames=$prefixtest$testName$postfixtest; else finalTestNames=$finalTestNames`echo $testseparator$prefixtest$testName$postfixtest`; fi;done
-#finalTestNames=`echo $finalTestNames | sed 's/,$//g'` ; fi
+#finalTestNames=`echo $finalTestNames | sed 's/,$//g'`
 #if [[ $finalTestNames != "" ]] ; then execute_tests $finalTestNames ; failfast_tests ; fi
 execute_tests "sample.junit.PriorityTest.Test1, sample.junit.PriorityTest.Test2"
 }

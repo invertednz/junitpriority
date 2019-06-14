@@ -16,8 +16,8 @@ finalTestNames=""
 
 delete_reports () {
 echo "here 1"
-if [[ $reporttype == "directory"]] ; then rm '$report*.xml' ; fi
-if [[ $reporttype == "file" ]] ; then rm $report ; fi
+#if [[ $reporttype == "directory"]] ; then rm '$report*.xml' ; fi
+#if [[ $reporttype == "file" ]] ; then rm $report ; fi
 }
 
 #./GetAndRunTests.sh: line 18: syntax error in conditional expression: unexpected token `;'

@@ -113,11 +113,12 @@ while [ "$1" != "" ]; do
     esac
     shift
 done
+ 
+testsuite=$(urlencode "$testsuite")
+project=$(urlencode "$project")
 
-urlencode $testsuite
-testsuite=$?
-urlencode $project
-project=$?
+echo $testsuite
+echo $project
 
 if [[ $report == *.xml* ]] ; then reporttype="file" ; fi
 if [[ $report == *.Xml* ]] ; then reporttype="file" ; fi
@@ -142,4 +143,4 @@ echo $commitId
 
 #$url $apiKey $project $testsuite $fail $additionalargs $endrun $testseparator $postfixtest $prefixtest $startrun $fullnameseparator $fullname $failfast $maxrerun $rerun $importtype $teststorun $reporttype $report $commitId $run_id
 echo "Getting tests to run"
-. ./GetAndRunTests.sh
+#. ./GetAndRunTests.sh

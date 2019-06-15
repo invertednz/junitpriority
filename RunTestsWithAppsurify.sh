@@ -114,8 +114,8 @@ while [ "$1" != "" ]; do
     shift
 done
  
-testsuite=$(urlencode "$testsuite")
-project=$(urlencode "$project")
+#testsuite=$(urlencode "$testsuite")
+#project=$(urlencode "$project")
 
 echo $testsuite
 echo $project

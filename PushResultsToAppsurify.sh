@@ -1,26 +1,9 @@
-#url
-#url="http://appsurify.dev.appsurify.com"
-url=$1
-#API Key
-#apiKey="MTpEbzhXQThOaW14bHVQTVdZZXNBTTVLT0xhZ00"
-apiKey=$2
-#Project
-#project="2"
-project=$3
-#Test Suite
-#testsuite="1"
-testsuite=$4
-#get commit
-commitId=$5
-report=$6
-#importtype="junit"
-
-
 
 if [[ $reporttype == "directory" ]] ; then
     for fileName in `ls -1 $report*.xml`
         do
-            echo "call api for $fileName" 
+            echo "call api for $fileName" ''
+            echo $url
             import=`curl -X POST "$url/api/external/import/" -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' -H "token: $apiKey" -F "file=@$fileName" -F 'project_name'="$project" -F 'test_suite_name'="$testsuite" -F 'type'=$importtype -F 'commit'=$commitId`
             echo "here 4"
             echo $import

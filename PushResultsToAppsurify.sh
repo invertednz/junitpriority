@@ -17,7 +17,7 @@ report=$6
 
 
 
-if [[ $reporttype == "directory"]] ; then
+if [[ $reporttype == "directory" ]] ; then
     for fileName in `ls -1 $report*.xml`
         do
             echo "call api for $fileName" 
@@ -29,8 +29,7 @@ if [[ $reporttype == "directory"]] ; then
             if [[ $run_id == "" ]] ; then run_id=`echo $var | sed 's/test_run_id:/test_run\=/g' ` ; fi
             #print testrun name
             echo $run_id
-        done
-; fi
+        done ; fi
 
 if [[ $reporttype == "file" ]] ; then
     import=`curl -X POST "$url/api/external/import/" -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' -H "token: $apiKey" -F "file=@$report" -F 'project_name'="$project" -F 'test_suite_name'="$testsuite" -F 'type'=$importtype -F 'commit'=$commitId`
@@ -40,8 +39,7 @@ if [[ $reporttype == "file" ]] ; then
     echo $var
     if [[ $run_id == "" ]] ; then run_id=`echo $var | sed 's/test_run_id:/test_run\=/g' ` ; fi
     #print testrun name
-    echo $run_id
-; fi
+    echo $run_id ; fi
 
 
 #import=`curl -X POST "$url/api/external/import/" -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' -H "token: $apiKey" -F "file=@$report" -F 'project_name'="$project" -F 'test_suite_name'="$testsuite" -F 'type'=$importtype -F 'commit'=$commitId`

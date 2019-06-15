@@ -15,9 +15,8 @@ commitId=$5
 finalTestNames=""
 
 delete_reports () {
-echo "here 1"
-#if [[ $reporttype == "directory"]] ; then rm '$report*.xml' ; fi
-#if [[ $reporttype == "file" ]] ; then rm $report ; fi
+if [[ $reporttype == "directory" ]] ; then directorToDelete=$report'*.xml' ; rm $directorToDelete ; fi
+if [[ $reporttype == "file" ]] ; then rm $report ; fi
 }
 
 #./GetAndRunTests.sh: line 18: syntax error in conditional expression: unexpected token `;'
@@ -34,7 +33,7 @@ echo $startrun$1$endrun
 
 get_tests () {
 finalTestNames=""
-json=`curl --header "token: $apiKey" "$url/api/external/prioritized-tests/?project_name=$project&priority=5&full_name=$fullname&test_suite_name=$testsuite&commit=$commitId" | sed 's/\"//g'`
+json=`curl --header "token: $apiKey" "$url/api/external/prioritized-tests/?project_name=$project&priority=$1&full_name=$fullname&test_suite_name=$testsuite&commit=$commitId" | sed 's/\"//g'`
 #echo $json
 prop="name"
 values=`echo $json | sed 's/\\\\\//\//g' | sed 's/[{}]//g' |tr "," "\n" | sed 's/\"\:\"/\|/g' | sed 's/[\,]/ /g' | sed 's/\"//g' | grep -w $prop | sed 's/\[//g' | sed 's/\]//g' | sed 's/name://g' `
@@ -44,7 +43,7 @@ return $values
 
 #could do something smart where we check to see if these are medium and rerun to only rerun medium tests not high and medium
 rerun_tests_execute () {
-get_tests $1
+get_tests 5
 count=0
 
 for testName in $?; do count=$((count+1));  echo $count; if [ $(( $count % $maxtests )) -eq "0" ]; then count=0; finalTestNames=$finalTestNames`echo $testseparator$prefixtest$testName$postfixtest`; finalTestNames=`echo $finalTestNames | sed 's/,$//g'`; execute_tests $finalTestNames ; finalTestNames=""; elif [ count == 1 ];  then finalTestNames=$prefixtest$testName$postfixtest; else finalTestNames=$finalTestNames`echo $testseparator$prefixtest$testName$postfixtest`; fi;done
@@ -59,21 +58,23 @@ if [[ $rerun == "true" ]]; then
     do
         rerun_tests_execute
         (( numruns++ ))
-    done
-; fi
+    done ; fi
 }
 
 failfast_tests () {
 if [[ $failfast == "true" ]] ; then
     rerun_tests $1
-    . ./GetResultsFromAppsurify.sh #"$1" "$2" "$3" "$4" "$commitId" "$report"
-; fi       
+    . ./GetResultsFromAppsurify.sh ; fi       
 }
 
 
 ##try to be smarter and fail as soon as a group of tests has failed and be rerun, so add the reruns to here somehow?
 get_and_run_tests () {
-get_tests $1
+#get_tests $1
+
+
+
+###################
 #then echo $values
 #if [[ $json != *"name"* ]] ; then echo "No test found" ; values="" ; fi
 #for testName in $values; do count=$((count+1));  echo $count; if [ $(( $count % $maxtests )) -eq "0" ]; then finalTestNames=$finalTestNames`echo $starttests$testName,`; finalTestNames=`echo $finalTestNames | sed 's/,$//g'`; mvn -Dtest=$finalTestNames test ; finalTestNames=""; else finalTestNames=$finalTestNames`echo $starttests$testName,`; fi;done
@@ -85,7 +86,7 @@ count=0
 #for testName in $?; do count=$((count+1));  echo $count; if [ $(( $count % $maxtests )) -eq "0" ]; then count=0; finalTestNames=$finalTestNames`echo $testseparator$prefixtest$testName$postfixtest`; finalTestNames=`echo $finalTestNames | sed 's/,$//g'`; execute_tests $finalTestNames ; failfast_tests ; finalTestNames=""; elif [ count == 1 ];  then finalTestNames=$prefixtest$testName$postfixtest; else finalTestNames=$finalTestNames`echo $testseparator$prefixtest$testName$postfixtest`; fi;done
 #finalTestNames=`echo $finalTestNames | sed 's/,$//g'`
 #if [[ $finalTestNames != "" ]] ; then execute_tests $finalTestNames ; failfast_tests ; fi
-execute_tests "sample.junit.PriorityTest.Test1, sample.junit.PriorityTest.Test2"
+execute_tests "sample.junit.PriorityTest#Test1,sample.junit.PriorityTest#Test2"
 }
 
 

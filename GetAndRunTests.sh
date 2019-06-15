@@ -15,7 +15,7 @@ echo "here 2"
 if [[ $deletereports == "true" ]] ; then delete_reports ; fi
 $startrun$1$endrun
 echo $startrun$1$endrun
-. ./PushResultsToAppsurify.sh #"$1" "$2" "$3" "$4" "$commitId" "$report"
+. ./PushResultsToAppsurify.sh 
 }
 
 get_tests () {

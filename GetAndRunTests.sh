@@ -45,7 +45,7 @@ if [[ $rerun == "true" ]]; then
     numruns=0;
     while [ $numruns -lt $maxrerun ]
     do
-        sleep 5
+        sleep 1m
         rerun_tests_execute
         (( numruns++ ))
     done ; fi

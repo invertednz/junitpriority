@@ -1,3 +1,18 @@
+urlencode() {
+    # urlencode <string>
+
+    local length="${#1}"
+    for (( i = 0; i < length; i++ )); do
+        local c="${1:i:1}"
+        case $c in
+            [a-zA-Z0-9.~_-:/]) printf "$c" ;;
+            *) printf '%%%x' \'"$c" ;;
+        esac
+    done
+}
+
+
+
 
 fail="newdefects, reopeneddefects" #default new defects and reopened defects  #options newdefects, reopeneddefects, flakybrokentests, newflaky, reopenedflaky, failedtests, brokentests
 additionalargs="" #default ''
@@ -16,6 +31,8 @@ teststorun="all" #options include - high, medium, low, unassigned, ready, open
 deletereports="false" #options true or false, BE CAREFUL THIS WILL DELETE THE SPECIFIC FILE OR ALL XML FILES IN THE DIRECTORY
 #startrun needs to end with a space sometimes
 #endrun needs to start with a space sometimes
+
+commitId=`git log -1 --pretty="%H"`
 
 ###############
 #atm rerunning tests and fast fail don't work together very well
@@ -87,6 +104,9 @@ while [ "$1" != "" ]; do
         -d | --deletereports ) shift
                                deletereports=$1
                                ;;
+        -d | --commitId )      shift
+                               commitId=$1
+                               ;;
         -h | --help )          echo "please see url for more details on this script and how to execute your tests with appsurify"
                                exit 1
                                ;;
@@ -94,26 +114,14 @@ while [ "$1" != "" ]; do
     shift
 done
 
-#echo $url
-#echo $apiKey
-#echo $project
-#echo $testsuite
-#echo $fail #default new defects and reopened defects
-#echo $additionalargs #default ''
-#echo $endrun #default ''
-#echo $testseparator #default ' '
-#echo $postfixtest #default ''
-#echo $prefixtest #default ''
-#echo $startrun
-#echo $fullnameseparator #default ' '
-#echo $fullname #default false
-#echo $failfast #defult false
-#echo $maxrerun #default 3
-#echo $rerun #default false
-#echo $importtype #default junit
-#echo $teststorun
-#echo $reporttype #default directory
-#echo $report #needs to end with a \ for directory or .xml for file
+urlencode $testsuite
+testsuite=$?
+urlencode $project
+project=$?
+
+if [[ $report == *.xml* ]] ; then reporttype="file" ; fi
+if [[ $report == *.Xml* ]] ; then reporttype="file" ; fi
+if [[ $report == *.XML* ]] ; then reporttype="file" ; fi
 
 if [[ $url == "" ]] ; then echo "no url specified" ; exit 1 ; fi
 if [[ $apiKey == "" ]] ; then echo "no apiKey specified" ; exit 1 ; fi
@@ -126,31 +134,11 @@ if [[ $startrun == "" ]] ; then echo "no command used to start running tests spe
 ####example RunTestsWithAppsurify.sh --url "http://appsurify.dev.appsurify.com" --apikey "MTpEbzhXQThOaW14bHVQTVdZZXNBTTVLT0xhZ00" --project "Test" --testsuite "Test" --report "report" --teststorun "all" --startrun "mvn -tests" 
 #example RunTestsWithAppsurify.sh --url "http://appsurify.dev.appsurify.com" --apikey "MTpEbzhXQThOaW14bHVQTVdZZXNBTTVLT0xhZ00" --project "Test" --testsuite "Test" --report "report" --teststorun "all" --startrun "C:\apache\apache-maven-3.5.0\bin\mvn tests " 
 
-#url
-#url="http://appsurify.dev.appsurify.com"
-##url=$1
-#API Key
-#apiKey="MTpEbzhXQThOaW14bHVQTVdZZXNBTTVLT0xhZ00"
-##apiKey=$2
-#Project
-#project="2"
-##project=$3
-#Test Suite
-#testsuite="1"
-##testsuite=$4
-#get commit
-commitId=`git log -1 --pretty="%H"`
+
 run_id=""
-##report=$5
+
 
 echo $commitId
 
 #$url $apiKey $project $testsuite $fail $additionalargs $endrun $testseparator $postfixtest $prefixtest $startrun $fullnameseparator $fullname $failfast $maxrerun $rerun $importtype $teststorun $reporttype $report $commitId $run_id
 echo "Getting tests to run"
-. ./GetAndRunTests.sh #"$1" "$2" "$3" "$4" "$commitId" 
-
-#. ./PushResultsToAppsurify.sh "$1" "$2" "$3" "$4" "$commitId" "$report"
-
-#echo $run_id
-
-#. ./GetResultsFromAppsurify.sh #"$1" "$2" "$3" "$4" "$commitId" "$report"

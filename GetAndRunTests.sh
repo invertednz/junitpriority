@@ -22,7 +22,7 @@ get_tests () {
 finalTestNames=""
 echo "getting tests"
 echo "token: $apiKey" "$url/api/external/prioritized-tests/?project_name='$project'&priority=$1&full_name=$fullname&test_suite_name=$testsuite&commit=$commitId"
-json=`curl --header "token: $apiKey" "$url/api/external/prioritized-tests/?project_name=$project&priority=$1&full_name=$fullname&test_suite_name=$testsuite&commit=$commitId" | sed 's/\"//g'`
+json=`curl --header "token: $apiKey" "$url/api/external/prioritized-tests/?project_name=$projectencoded&priority=$1&full_name=$fullname&test_suite_name=$testsuiteencoded&commit=$commitId" | sed 's/\"//g'`
 echo $json
 prop="name"
 values=`echo $json | sed 's/\\\\\//\//g' | sed 's/[{}]//g' |tr "," "\n" | sed 's/\"\:\"/\|/g' | sed 's/[\,]/ /g' | sed 's/\"//g' | grep -w $prop | sed 's/\[//g' | sed 's/\]//g' | sed 's/name://g' `

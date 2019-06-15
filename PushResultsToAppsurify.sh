@@ -3,7 +3,7 @@ if [[ $reporttype == "directory" ]] ; then
     for fileName in `ls -1 $report*.xml`
         do
             echo "call api for $fileName" ''
-            echo "$url/api/external/import/ -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' -H "token: $apiKey" -F "file=@$fileName" -F 'project_name'="$project" -F 'test_suite_name'="$testsuite" -F 'type'=$importtype -F 'commit'=$commitId`"
+            echo "$url/api/external/import/ -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' -H 'token: $apiKey' -F 'file=@$fileName' -F 'project_name'='$project' -F 'test_suite_name'='$testsuite' -F 'type'=$importtype -F 'commit'=$commitId"
             import=`curl -X POST "$url/api/external/import/" -H 'content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' -H "token: $apiKey" -F "file=@$fileName" -F 'project_name'="$project" -F 'test_suite_name'="$testsuite" -F 'type'=$importtype -F 'commit'=$commitId`
             echo "here 4"
             echo $import

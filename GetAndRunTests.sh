@@ -1,4 +1,4 @@
-
+valuetests=""
 finalTestNames=""
 
 delete_reports () {
@@ -19,6 +19,7 @@ echo $startrun$1$endrun
 }
 
 get_tests () {
+valuetests=""
 finalTestNames=""
 echo "getting tests"
 echo "token: $apiKey" "$url/api/external/prioritized-tests/?project_name='$project'&priority=$1&full_name=$fullname&test_suite_name=$testsuite&commit=$commitId"
@@ -27,7 +28,8 @@ echo $json
 prop="name"
 values=`echo $json | sed 's/\\\\\//\//g' | sed 's/[{}]//g' |tr "," "\n" | sed 's/\"\:\"/\|/g' | sed 's/[\,]/ /g' | sed 's/\"//g' | grep -w $prop | sed 's/\[//g' | sed 's/\]//g' | sed 's/name://g' `
 if [[ $json != *"name"* ]] ; then echo "No test found" ; values="" ; fi
-return $values
+echo $values
+valuetests=$values
 }
 
 #could do something smart where we check to see if these are medium and rerun to only rerun medium tests not high and medium
@@ -35,7 +37,7 @@ rerun_tests_execute () {
 get_tests 5
 count=0
 
-for testName in $?; do count=$((count+1));  echo $count; if [ $(( $count % $maxtests )) -eq "0" ]; then count=0; finalTestNames=$finalTestNames`echo $testseparator$prefixtest$testName$postfixtest`; finalTestNames=`echo $finalTestNames | sed 's/,$//g'`; execute_tests $finalTestNames ; finalTestNames=""; elif [ count == 1 ];  then finalTestNames=$prefixtest$testName$postfixtest; else finalTestNames=$finalTestNames`echo $testseparator$prefixtest$testName$postfixtest`; fi;done
+for testName in $valuetests; do count=$((count+1));  echo $count; if [ $(( $count % $maxtests )) -eq "0" ]; then count=0; finalTestNames=$finalTestNames`echo $testseparator$prefixtest$testName$postfixtest`; finalTestNames=`echo $finalTestNames | sed 's/,$//g'`; execute_tests $finalTestNames ; finalTestNames=""; elif [ count == 1 ];  then finalTestNames=$prefixtest$testName$postfixtest; else finalTestNames=$finalTestNames`echo $testseparator$prefixtest$testName$postfixtest`; fi;done
 finalTestNames=`echo $finalTestNames | sed 's/,$//g'`
 if [[ $finalTestNames != "" ]] ; then execute_tests $finalTestNames ; fi
 }
